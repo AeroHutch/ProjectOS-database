@@ -1,1 +1,80 @@
-<h1>UNIMPLEMENTED</h1>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Verify ProjectOS</title>
+</head>
+<body>
+
+  <h1>Verify ProjectOS</h1>
+
+  <label for="keyInput">Enter listed Key:</label>
+  <input type="text" id="keyInput" placeholder="e.g. 1234EU" value="1234EU">
+  
+  <button id="processBtn">Process Key</button>
+
+  <h3>Resulting Verification Key:</h3>
+  <div id="outputKey"></div>
+
+  <script>
+    let numberCypher = [];
+    let verificationkey = [];
+
+    // URL to your raw text file containing the cipher mapping
+    const fileUrl = "https://raw.githubusercontent.com/AeroHutch/ProjectOS-database/main/verification/cypher.txt";
+
+    async function loadCypherFile() {
+      try {
+        const response = await fetch(fileUrl);
+        const text = await response.text();
+        
+        numberCypher = text.split("\n").map(line => line.trim()).filter(line => line !== "");
+        console.log("Loaded numberCypher file:", numberCypher);
+      } catch (error) {
+        console.error("Error loading the cypher file:", error);
+      }
+    }
+
+    function processLogic() {
+      const decodedKey = document.getElementById("keyInput").value;
+      verificationkey = [];
+
+      // Check letters 5 through 6
+      const codeSegment = decodedKey.slice(4, 6);
+
+      if (codeSegment === "EU") {
+        verificationkey.push("J538");
+      } else if (codeSegment === "NO") {
+        verificationkey.push("62U1");
+      } else if (codeSegment === "SO") {
+        verificationkey.push("7S53");
+      } else if (codeSegment === "AS") {
+        verificationkey.push("10E2");
+      } else if (codeSegment === "OC") {
+        verificationkey.push("84A1");
+      } else if (codeSegment === "AF") {
+        verificationkey.push("901P");
+      } else if (codeSegment === "AN") {
+        verificationkey.push("72L4");
+      }
+
+      // Process letters 1 through 4
+      for (let i = 0; i < 4; i++) {
+        let charVal = decodedKey.charAt(i); 
+        let cypherIndex = parseInt(charVal, 10);
+
+        if (!isNaN(cypherIndex) && numberCypher[cypherIndex - 1] !== undefined) {
+          verificationkey.push(numberCypher[cypherIndex - 1]);
+        }
+      }
+
+      // Format output as a single space-separated string (e.g., "1234 5678 9101 1121 3141")
+      document.getElementById("outputKey").textContent = verificationkey.join(" ");
+    }
+
+    document.getElementById("processBtn").addEventListener("click", processLogic);
+    
+    loadCypherFile();
+  </script>
+
+</body>
+</html>
