@@ -20,6 +20,8 @@
       border-collapse: collapse;
       table-layout: fixed;
       text-align: center;
+      /* Dynamic viewport-based font sizing */
+      font-size: min(4vw, 6vh);
     }
 
     th, td {
@@ -30,6 +32,8 @@
 
     th {
       font-weight: bold;
+      /* Header text scales slightly smaller to maintain grid balance */
+      font-size: min(3.5vw, 5vh);
     }
 
     td.today {
@@ -53,15 +57,15 @@
     const headerRow = document.getElementById('headerRow');
     const calendarBody = document.getElementById('calendarBody');
 
-    // Automatically scale font size based on current container height
+    // Dynamic Font Resizer for finer JS control if needed
     function adjustFontSize() {
-      const containerHeight = window.innerHeight;
-      // Scales font dynamically based on available height
-      const dynamicFontSize = Math.max(8, containerHeight / 14); 
-      calendarTable.style.fontSize = `${dynamicFontSize}px`;
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      // Fits font based on whichever dimension is smaller
+      const calculatedSize = Math.min(w / 12, h / 10);
+      calendarTable.style.fontSize = `${calculatedSize}px`;
     }
 
-    // Listen for iframe/window resizes
     window.addEventListener('resize', adjustFontSize);
 
     // Auto-detect browser/system locale for day abbreviations
@@ -113,7 +117,6 @@
       }
     }
 
-    // Initial scale check
     adjustFontSize();
   </script>
 
