@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Calendar Table</title>
+  <title>ProjectOS Calendar</title>
   <style>
     html, body {
       width: 100%;
@@ -19,7 +19,6 @@
       height: 100%;
       border-collapse: collapse;
       table-layout: fixed;
-      font-size: 8.5px;
       text-align: center;
     }
 
@@ -50,17 +49,27 @@
   </table>
 
   <script>
+    const calendarTable = document.getElementById('calendarTable');
     const headerRow = document.getElementById('headerRow');
     const calendarBody = document.getElementById('calendarBody');
 
-    // Auto-detect browser/system locale
-    const userLocale = navigator.language || 'default';
+    // Automatically scale font size based on current container height
+    function adjustFontSize() {
+      const containerHeight = window.innerHeight;
+      // Scales font dynamically based on available height
+      const dynamicFontSize = Math.max(8, containerHeight / 14); 
+      calendarTable.style.fontSize = `${dynamicFontSize}px`;
+    }
 
-    // Generate localized day abbreviations starting from Sunday
+    // Listen for iframe/window resizes
+    window.addEventListener('resize', adjustFontSize);
+
+    // Auto-detect browser/system locale for day abbreviations
+    const userLocale = navigator.language || 'default';
     const dayFormatter = new Intl.DateTimeFormat(userLocale, { weekday: 'short' });
+
     for (let i = 0; i < 7; i++) {
-      // Jan 4, 1970 was a Sunday
-      const tempDate = new Date(1970, 0, 4 + i);
+      const tempDate = new Date(1970, 0, 4 + i); // Jan 4, 1970 was a Sunday
       const th = document.createElement('th');
       th.textContent = dayFormatter.format(tempDate);
       headerRow.appendChild(th);
@@ -103,6 +112,9 @@
         calendarBody.appendChild(tr);
       }
     }
+
+    // Initial scale check
+    adjustFontSize();
   </script>
 
 </body>
