@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Calendar Table</title>
+  <style>
+    html, body {
+      width: 198px;
+      height: 148px;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      font-family: sans-serif;
+    }
+
+    table {
+      width: 100%;
+      height: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: 10px;
+      text-align: center;
+    }
+
+    th, td {
+      padding: 0;
+      margin: 0;
+    }
+
+    td.today {
+      outline: 2px solid blue;
+      background-color: blue;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+  <table id="calendarTable">
+    <thead>
+      <tr>
+        <th>Su</th>
+        <th>Mo</th>
+        <th>Tu</th>
+        <th>We</th>
+        <th>Th</th>
+        <th>Fr</th>
+        <th>Sa</th>
+      </tr>
+    </thead>
+    <tbody id="calendarBody"></tbody>
+  </table>
+
+  <script>
+    const calendarBody = document.getElementById('calendarBody');
+
+    const today = new Date();
+    const currentYear = today.getFullYear();
+    const currentMonth = today.getMonth();
+    const currentDate = today.getDate();
+
+    const firstDayIndex = new Date(currentYear, currentMonth, 1).getDay();
+    const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+    let dayCounter = 1;
+
+    for (let row = 0; row < 6; row++) {
+      const tr = document.createElement('tr');
+      let rowHasDates = false;
+
+      for (let col = 0; col < 7; col++) {
+        const td = document.createElement('td');
+
+        if ((row === 0 && col < firstDayIndex) || dayCounter > daysInMonth) {
+          td.textContent = '';
+        } else {
+          rowHasDates = true;
+          td.textContent = dayCounter;
+
+          if (dayCounter === currentDate) {
+            td.className = 'today';
+          }
+
+          dayCounter++;
+        }
+
+        tr.appendChild(td);
+      }
+
+      if (rowHasDates) {
+        calendarBody.appendChild(tr);
+      }
+    }
+  </script>
+
+</body>
+</html>
