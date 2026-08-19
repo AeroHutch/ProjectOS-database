@@ -1,16 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
   <meta charset="UTF-8">
   <title>Calendar Table</title>
   <style>
     html, body {
-      width: 198px;
-      height: 148px;
+      width: 100%;
+      height: 100%;
       margin: 0;
       padding: 0;
       overflow: hidden;
       font-family: sans-serif;
+      background: transparent;
     }
 
     table {
@@ -18,13 +19,18 @@
       height: 100%;
       border-collapse: collapse;
       table-layout: fixed;
-      font-size: 10px;
+      font-size: 8.5px;
       text-align: center;
     }
 
     th, td {
       padding: 0;
       margin: 0;
+      line-height: 1;
+    }
+
+    th {
+      font-weight: bold;
     }
 
     td.today {
@@ -38,21 +44,27 @@
 
   <table id="calendarTable">
     <thead>
-      <tr>
-        <th>Su</th>
-        <th>Mo</th>
-        <th>Tu</th>
-        <th>We</th>
-        <th>Th</th>
-        <th>Fr</th>
-        <th>Sa</th>
-      </tr>
+      <tr id="headerRow"></tr>
     </thead>
     <tbody id="calendarBody"></tbody>
   </table>
 
   <script>
+    const headerRow = document.getElementById('headerRow');
     const calendarBody = document.getElementById('calendarBody');
+
+    // Auto-detect browser/system locale
+    const userLocale = navigator.language || 'default';
+
+    // Generate localized day abbreviations starting from Sunday
+    const dayFormatter = new Intl.DateTimeFormat(userLocale, { weekday: 'short' });
+    for (let i = 0; i < 7; i++) {
+      // Jan 4, 1970 was a Sunday
+      const tempDate = new Date(1970, 0, 4 + i);
+      const th = document.createElement('th');
+      th.textContent = dayFormatter.format(tempDate);
+      headerRow.appendChild(th);
+    }
 
     const today = new Date();
     const currentYear = today.getFullYear();
